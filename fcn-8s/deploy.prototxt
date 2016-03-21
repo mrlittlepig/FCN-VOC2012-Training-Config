@@ -1,4 +1,4 @@
-name: "FCN-8S"
+name: "FCN"
 
 input: "data"
 input_dim: 1
@@ -6,12 +6,19 @@ input_dim: 3
 input_dim: 500
 input_dim: 500
 
-
 layer {
   name: "conv1_1"
   type: "Convolution"
   bottom: "data"
   top: "conv1_1"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 64
     pad: 100
@@ -30,6 +37,14 @@ layer {
   type: "Convolution"
   bottom: "conv1_1"
   top: "conv1_2"
+  param {
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 64
     pad: 1
@@ -59,6 +74,14 @@ layer {
   type: "Convolution"
   bottom: "pool1"
   top: "conv2_1"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 128
     pad: 1
@@ -77,6 +100,14 @@ layer {
   type: "Convolution"
   bottom: "conv2_1"
   top: "conv2_2"
+  param {
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 128
     pad: 1
@@ -106,6 +137,14 @@ layer {
   type: "Convolution"
   bottom: "pool2"
   top: "conv3_1"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 256
     pad: 1
@@ -124,6 +163,14 @@ layer {
   type: "Convolution"
   bottom: "conv3_1"
   top: "conv3_2"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 256
     pad: 1
@@ -142,6 +189,14 @@ layer {
   type: "Convolution"
   bottom: "conv3_2"
   top: "conv3_3"
+  param {
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 256
     pad: 1
@@ -171,6 +226,14 @@ layer {
   type: "Convolution"
   bottom: "pool3"
   top: "conv4_1"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 512
     pad: 1
@@ -189,6 +252,14 @@ layer {
   type: "Convolution"
   bottom: "conv4_1"
   top: "conv4_2"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 512
     pad: 1
@@ -207,6 +278,14 @@ layer {
   type: "Convolution"
   bottom: "conv4_2"
   top: "conv4_3"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 512
     pad: 1
@@ -236,6 +315,14 @@ layer {
   type: "Convolution"
   bottom: "pool4"
   top: "conv5_1"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 512
     pad: 1
@@ -254,6 +341,14 @@ layer {
   type: "Convolution"
   bottom: "conv5_1"
   top: "conv5_2"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 512
     pad: 1
@@ -272,6 +367,14 @@ layer {
   type: "Convolution"
   bottom: "conv5_2"
   top: "conv5_3"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 512
     pad: 1
@@ -301,10 +404,24 @@ layer {
   type: "Convolution"
   bottom: "pool5"
   top: "fconv6"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 4096
     kernel_size: 7
     engine: CAFFE
+    weight_filler {
+        type: "xavier"
+    }
+    bias_filler {
+        type: "constant"
+    }
   }
 }
 layer {
@@ -327,10 +444,24 @@ layer {
   type: "Convolution"
   bottom: "fconv6"
   top: "fconv7"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 4096
     kernel_size: 1
     engine: CAFFE
+    weight_filler {
+        type: "xavier"
+    }
+    bias_filler {
+        type: "constant"
+    }
   }
 }
 layer {
@@ -350,22 +481,40 @@ layer {
 }
 
 layer {
-  name: "score8"
+  name: "score21"
   type: "Convolution"
   bottom: "fconv7"
-  top: "score8"
+  top: "score21"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 21
     kernel_size: 1
     engine: CAFFE
+    weight_filler {
+        type: "xavier"
+    }
+    bias_filler {
+        type: "constant"
+    }
   }
 }
 
 layer {
   name: "upscore2"
   type: "Deconvolution"
-  bottom: "score8"
+  bottom: "score21"
   top: "upscore2"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 21
     bias_term: false
@@ -379,10 +528,24 @@ layer {
   type: "Convolution"
   bottom: "pool4"
   top: "score-pool4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 21
     kernel_size: 1
     engine: CAFFE
+    weight_filler {
+        type: "xavier"
+    }
+    bias_filler {
+        type: "constant"
+    }
   }
 }
 
@@ -405,6 +568,10 @@ layer {
   type: "Deconvolution"
   bottom: "score-fused"
   top: "score4"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 21
     bias_term: false
@@ -418,10 +585,24 @@ layer {
   type: "Convolution"
   bottom: "pool3"
   top: "score-pool3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 21
     kernel_size: 1
     engine: CAFFE
+    weight_filler {
+        type: "xavier"
+    }
+    bias_filler {
+        type: "constant"
+    }
   }
 }
 
@@ -444,6 +625,10 @@ layer {
   type: "Deconvolution"
   bottom: "score-final"
   top: "bigscore"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
   convolution_param {
     num_output: 21
     bias_term: false
@@ -451,6 +636,4 @@ layer {
     stride: 8
   }
 }
-
 layer { type: 'Crop' name: 'crop' bottom: 'bigscore' bottom: 'data' top: 'score' }
-
